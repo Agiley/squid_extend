@@ -21,9 +21,9 @@ http_access allow authenticated
 <%- end %>
 
 <%- node[:squid][:ip_addresses].each_with_index do |ip_address, index| %>
-  acl ip_<%= index %> myip <%= ip_address %>
-  tcp_outgoing_address <%= ip_address %> ip_<%= index %>
-<%- end if [:squid][:ip_addresses] && [:squid][:ip_addresses].any? %>
+acl ip_<%= index %> myip <%= ip_address %>
+tcp_outgoing_address <%= ip_address %> ip_<%= index %>
+<%- end if node[:squid][:ip_addresses] && node[:squid][:ip_addresses].any? %>
 
 <%- if node[:squid][:dns][:nameservers] && node[:squid][:dns][:nameservers].any? %>
 dns_nameservers <%= node[:squid][:dns][:nameservers].join(" ") %>
