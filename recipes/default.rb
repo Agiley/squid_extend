@@ -1,6 +1,26 @@
 include_recipe 'squid'
-
 include_recipe 'squid_extend::auth'
+
+[node[:squid][:log_dir], node[:squid][:cache_dir], node[:squid][:coredump_dir]].each do |dir|
+  
+  # Create directories if they do not exist
+  directory dir do
+    action :create
+    recursive true
+    owner node[:squid][:user]
+    mode 00755
+    not_if { ::File.exists?(dir) }
+  end
+  
+  # Chown existing directories to the squid / cache_effective_user
+  bash "chown directory #{dir} to use #{node[:squid][:user]}" do
+    code <<-EOH
+      chown -R #{node[:squid][:user]}:#{node[:squid][:user]} #{dir}
+      chmod -R 755 #{dir}
+    EOH
+  end
+  
+end if node[:squid][:user]
 
 template node['squid']['config_file'] do
   cookbook "squid_extend"

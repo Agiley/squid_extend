@@ -1,6 +1,11 @@
+cache_effective_user <%= node[:squid][:user] %>
+
 pid_filename <%= node[:squid][:pid_file] %>
 
 access_log daemon:<%= node[:squid][:log_dir] %>/access.log squid
+cache_log daemon:<%= node[:squid][:log_dir] %>/cache.log squid
+
+hosts_file /etc/hosts
 
 <% if node[:squid][:port].kind_of?(Array) %>
   <% node[:squid][:port].each do |port| %>
@@ -43,6 +48,13 @@ snmp_access deny all
 #no_cache deny all
 <%- end %>
 
+<%- if node[:squid][:enable_cache_dir] %>
+cache_dir ufs <%= node[:squid][:cache_dir] %> <%= node[:squid][:cache_size] %> 16 256
+<%- end %>
+coredump_dir <%= node[:squid][:coredump_dir] %>
+maximum_object_size <%= node[:squid][:max_obj_size] %> <%= node[:squid][:max_obj_size_unit] %>
+cache_mem <%= node[:squid][:cache_mem] %> MB
+
 memory_pools off
 half_closed_clients off
 
@@ -76,9 +88,3 @@ request_header_access Proxy-Connection allow all
 request_header_access User-Agent allow all
 request_header_access Cookie allow all
 request_header_access All deny all
-
-hosts_file /etc/hosts
-
-<%- if node[:squid][:enable_cache_dir] %>
-cache_dir ufs <%= node[:squid][:cache_dir] %> <%= node[:squid][:cache_size] %> 16 256
-<%- end %>
