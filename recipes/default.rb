@@ -1,39 +1,55 @@
 include_recipe 'squid'
 include_recipe 'squid_extend::auth'
 
-directories = [
+node.set[:squid][:directories] = [
   node[:squid][:log_dir],
   node[:squid][:cache_dir],
   node[:squid][:coredump_dir]
 ]
 
-directories.each do |dir|
-  
+node.set[:squid][:log_files] = [
+  node[:squid][:access_log_path],
+  node[:squid][:cache_log_path]
+]
+
+node[:squid][:directories].each do |dir|
   # Create directories if they do not exist
   directory dir do
     action :create
     recursive true
     owner node[:squid][:user]
-    mode 00755
-    not_if { ::File.exists?(dir) }
+    group node[:squid][:group]
+    mode 0775
+    only_if { node[:squid][:user] && node[:squid][:group] && !::File.exists?(dir) }
   end
-  
-  # Chown existing directories to the squid / cache_effective_user
-  execute "chown directory #{dir} to user #{node[:squid][:user]}" do
-    command <<-EOH
-      chown -R #{node[:squid][:user]}:#{node[:squid][:user]} #{dir}
-      chmod -R 755 #{dir}
-    EOH
-    
-    user "root"
-    action :run
-    only_if { ::File.exists?(dir) }
-  end
-  
-end if node[:squid][:user]
+end
+
+execute "chown-squid-directories" do
+  command "chown -R #{node[:squid][:user]}:#{node[:squid][:group]} #{node[:squid][:directories].join(" ")}"
+  user "root"
+  action :nothing
+  only_if { node[:squid][:user] && node[:squid][:group] }
+end
+
+execute "chmod-squid-directories" do
+  command "chmod -R 755 #{node[:squid][:directories].join(" ")}"
+  user "root"
+  action :nothing
+end
+
+execute "chmod-squid-log-files" do
+  command "chmod -R 777 #{node[:squid][:log_files].join(" ")}"
+  user "root"
+  action :nothing
+end
 
 template node[:squid][:config_file] do
   cookbook  'squid_extend'
   source    'squid.conf.erb'
+  
+  notifies :run, "execute[chown-squid-directories]", :immediately
+  notifies :run, "execute[chmod-squid-directories]", :immediately
+  notifies :run, "execute[chmod-squid-log-files]", :immediately
+  
   notifies :restart, "service[#{node[:squid][:service_name]}]", :immediately
 end

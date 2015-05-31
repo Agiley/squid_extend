@@ -1,8 +1,12 @@
 normal[:squid][:user]                     =   'proxy'
+normal[:squid][:group]                    =   'proxy'
 normal[:squid][:port]                     =   8800
 normal[:squid][:pid_file]                 =   '/var/run/squid3.pid'
 
-normal[:squid][:mode]                     =   'proxy'
+normal[:squid][:access_log_path]          =   "#{node[:squid][:log_dir]}/access.log"
+normal[:squid][:cache_log_path]           =   "#{node[:squid][:log_dir]}/cache.log"
+normal[:squid][:logging_protocol]         =   "daemon"
+normal[:squid][:logging_mode]             =   "combined"
 
 normal[:squid][:dns][:nameservers]        =   ['8.8.8.8', '8.8.4.4']
 normal[:squid][:dns][:ipcache_size]       =   10240
@@ -16,3 +20,5 @@ normal[:squid][:auth][:file]              =   '/etc/squid3/passwords'
 normal[:squid][:auth][:realm]             =   'Squid proxy-caching web server'
 normal[:squid][:auth][:children]          =   5
 normal[:squid][:auth][:credentials_ttl]   =   '1 minute'
+
+normal[:squid][:mode]                     =   'proxy'

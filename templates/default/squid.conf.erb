@@ -1,9 +1,19 @@
-cache_effective_user <%= node[:squid][:user] %>
+<%= "cache_effective_user #{node[:squid][:user]}" if node[:squid][:user] %>
+<%= "cache_effective_group #{node[:squid][:group]}" if node[:squid][:group] %>
 
 pid_filename <%= node[:squid][:pid_file] %>
 
+<%- if node[:squid][:access_log_path] %>
+access_log <%= node[:squid][:logging_protocol] %>:<%= node[:squid][:access_log_path] %> <%= node[:squid][:logging_mode] %>
+<%- else %>
 access_log daemon:<%= node[:squid][:log_dir] %>/access.log squid
+<%- end %>
+
+<%- if node[:squid][:cache_log_path] %>
+cache_log <%= node[:squid][:logging_protocol] %>:<%= node[:squid][:cache_log_path] %> <%= node[:squid][:logging_mode] %>
+<%- else %>
 cache_log daemon:<%= node[:squid][:log_dir] %>/cache.log squid
+<%- end %>
 
 hosts_file /etc/hosts
 
