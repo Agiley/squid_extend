@@ -8,6 +8,8 @@ normal[:squid][:dns][:nameservers]        =   ['8.8.8.8', '8.8.4.4']
 normal[:squid][:dns][:ipcache_size]       =   10240
 normal[:squid][:dns][:negative_dns_ttl]   =   '5 minutes'
 
+normal[:squid][:ip_addresses]             =   [node[:ipaddress]]
+
 normal[:squid][:auth][:enable]            =   true
 normal[:squid][:auth][:program]           =   '/usr/lib/squid3/basic_ncsa_auth'
 normal[:squid][:auth][:file]              =   '/etc/squid3/passwords'
