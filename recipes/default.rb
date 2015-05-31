@@ -18,15 +18,6 @@ directories.each do |dir|
     not_if { ::File.exists?(dir) }
   end
   
-  bash "chown directory #{dir} to user #{node[:squid][:user]}" do
-    code <<-EOH
-      chown -R #{node[:squid][:user]}:#{node[:squid][:user]} #{dir}
-      chmod -R 755 #{dir}
-    EOH
-    
-    only_if { ::File.exists?(dir) }
-  end
-  
   # Chown existing directories to the squid / cache_effective_user
   execute "chown directory #{dir} to user #{node[:squid][:user]}" do
     command <<-EOH
