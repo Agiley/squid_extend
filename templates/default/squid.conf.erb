@@ -3,16 +3,12 @@
 
 pid_filename <%= node[:squid][:pid_file] %>
 
-<%- if node[:squid][:access_log_path] %>
-access_log <%= node[:squid][:logging_protocol] %>:<%= node[:squid][:access_log_path] %> <%= node[:squid][:logging_mode] %>
-<%- else %>
-access_log daemon:<%= node[:squid][:log_dir] %>/access.log squid
-<%- end %>
-
-<%- if node[:squid][:cache_log_path] %>
-cache_log <%= node[:squid][:logging_protocol] %>:<%= node[:squid][:cache_log_path] %> <%= node[:squid][:logging_mode] %>
-<%- else %>
-cache_log daemon:<%= node[:squid][:log_dir] %>/cache.log squid
+<%- [:access, :cache].each do |log_type| %>
+  <%- if node[:squid]["#{log_type}_log_path"] %>
+<%= log_type %>_log <%= node[:squid][:log_module] %>:<%= node[:squid]["#{log_type}_log_path"] %> <%= node[:squid][:log_format] %>
+  <%- else %>
+<%= log_type %>_log daemon:<%= node[:squid][:log_dir] %>/<%= log_type %>.log squid
+  <%- end %>
 <%- end %>
 
 hosts_file /etc/hosts
