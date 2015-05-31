@@ -1,0 +1,84 @@
+pid_filename <%= node[:squid][:pid_file] %>
+
+access_log daemon:<%= node[:squid][:log_dir] %>/access.log squid
+
+<% if node[:squid][:port].kind_of?(Array) %>
+  <% node[:squid][:port].each do |port| %>
+http_port <%= port %>
+  <% end %>
+<% else %>
+http_port <%= node[:squid][:port] %>
+<% end %>
+
+<%- if node[:squid][:auth][:enable] %>
+auth_param basic program <%= node[:squid][:auth][:program] %> <%= node[:squid][:auth][:file] %>
+auth_param basic children <%= node[:squid][:auth][:children] %>
+auth_param basic realm <%= node[:squid][:auth][:realm] %>
+auth_param basic credentialsttl <%= node[:squid][:auth][:credentials_ttl] %>
+
+acl authenticated proxy_auth REQUIRED
+http_access allow authenticated
+<%- end %>
+
+<%- if node[:squid][:dns][:nameservers] && node[:squid][:dns][:nameservers].any? %>
+dns_nameservers <%= node[:squid][:dns][:nameservers].join(" ") %>
+<%- end %>
+
+<%= "ipcache_size #{node[:squid][:dns][:ipcache_size]}" if node[:squid][:dns][:ipcache_size] %>
+<%= "negative_dns_ttl #{node[:squid][:dns][:negative_dns_ttl]}" if node[:squid][:dns][:negative_dns_ttl] %>
+
+<%- if node[:squid][:mode] == 'proxy' %>
+acl all src 0.0.0.0/0.0.0.0
+no_cache deny all
+
+cache_access_log none
+cache_store_log none
+
+icp_port 0
+htcp_port 0
+snmp_port 0
+
+icp_access deny all
+htcp_access deny all
+snmp_access deny all
+<%- end %>
+
+memory_pools off
+half_closed_clients off
+
+forwarded_for off
+request_header_access Allow allow all
+request_header_access Authorization allow all
+request_header_access WWW-Authenticate allow all
+request_header_access Proxy-Authorization allow all
+request_header_access Proxy-Authenticate allow all
+request_header_access Cache-Control allow all
+request_header_access Content-Encoding allow all
+request_header_access Content-Length allow all
+request_header_access Content-Type allow all
+request_header_access Date allow all
+request_header_access Expires allow all
+request_header_access Host allow all
+request_header_access If-Modified-Since allow all
+request_header_access Last-Modified allow all
+request_header_access Location allow all
+request_header_access Pragma allow all
+request_header_access Accept allow all
+request_header_access Accept-Charset allow all
+request_header_access Accept-Encoding allow all
+request_header_access Accept-Language allow all
+request_header_access Content-Language allow all
+request_header_access Mime-Version allow all
+request_header_access Retry-After allow all
+request_header_access Title allow all
+request_header_access Connection allow all
+request_header_access Proxy-Connection allow all
+request_header_access User-Agent allow all
+request_header_access Cookie allow all
+request_header_access All deny all
+
+hosts_file /etc/hosts
+
+<%- if node[:squid][:enable_cache_dir] %>
+cache_dir ufs <%= node[:squid][:cache_dir] %> <%= node[:squid][:cache_size] %> 16 256
+<%- end %>
