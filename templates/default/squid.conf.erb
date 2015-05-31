@@ -28,12 +28,6 @@ dns_nameservers <%= node[:squid][:dns][:nameservers].join(" ") %>
 <%= "negative_dns_ttl #{node[:squid][:dns][:negative_dns_ttl]}" if node[:squid][:dns][:negative_dns_ttl] %>
 
 <%- if node[:squid][:mode] == 'proxy' %>
-acl all src 0.0.0.0/0.0.0.0
-no_cache deny all
-
-cache_access_log none
-cache_store_log none
-
 icp_port 0
 htcp_port 0
 snmp_port 0
@@ -41,6 +35,7 @@ snmp_port 0
 icp_access deny all
 htcp_access deny all
 snmp_access deny all
+#no_cache deny all
 <%- end %>
 
 memory_pools off
