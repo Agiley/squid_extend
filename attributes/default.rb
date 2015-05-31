@@ -6,7 +6,7 @@ normal[:squid][:pid_file]                 =   '/var/run/squid3.pid'
 normal[:squid][:access_log_path]          =   "#{node[:squid][:log_dir]}/access.log"
 normal[:squid][:cache_log_path]           =   "#{node[:squid][:log_dir]}/cache.log"
 normal[:squid][:log_module]               =   "daemon"
-normal[:squid][:log_format]               =   "common"
+normal[:squid][:log_format]               =   "squid"
 
 normal[:squid][:dns][:nameservers]        =   ['8.8.8.8', '8.8.4.4']
 normal[:squid][:dns][:ipcache_size]       =   10240
