@@ -1,4 +1,5 @@
 = DESCRIPTION:
+
 Custom Squid cookbook wrapper to enable ncsa_auth, make Squid more performant etc
 
 = REQUIREMENTS:
@@ -6,4 +7,5 @@ Custom Squid cookbook wrapper to enable ncsa_auth, make Squid more performant et
 = ATTRIBUTES: 
 
 = USAGE:
+
 include_recipe 'squid_extend'
