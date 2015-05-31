@@ -1,12 +1,6 @@
 include_recipe 'squid'
 include_recipe 'squid_extend::auth'
 
-template node[:squid][:config_file] do
-  cookbook  'squid_extend'
-  source    'squid.conf.erb'
-  notifies :restart, "service[#{node[:squid][:service_name]}]"
-end
-
 directories = [
   node[:squid][:log_dir],
   node[:squid][:cache_dir],
@@ -36,4 +30,8 @@ directories.each do |dir|
   
 end if node[:squid][:user]
 
-execute "sudo service #{node[:squid][:service_name]} restart"
+template node[:squid][:config_file] do
+  cookbook  'squid_extend'
+  source    'squid.conf.erb'
+  notifies :restart, "service[#{node[:squid][:service_name]}]", :immediately
+end
