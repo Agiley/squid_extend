@@ -47,22 +47,29 @@ dns_nameservers <%= node[:squid][:dns][:nameservers].join(" ") %>
 icp_port 0
 htcp_port 0
 snmp_port 0
-
 icp_access deny all
 htcp_access deny all
 snmp_access deny all
 #no_cache deny all
 <%- end %>
 
+<%= "cache_mem #{node[:squid][:cache_mem]}"                                           if node[:squid][:cache_mem] %>
+
 <%- if node[:squid][:enable_cache_dir] %>
 cache_dir ufs <%= node[:squid][:cache_dir] %> <%= node[:squid][:cache_size] %> 16 256
 <%- end %>
-coredump_dir <%= node[:squid][:coredump_dir] %>
-maximum_object_size <%= node[:squid][:max_obj_size] %> <%= node[:squid][:max_obj_size_unit] %>
-cache_mem <%= node[:squid][:cache_mem] %> MB
 
-memory_pools off
-half_closed_clients off
+<%= "cache_replacement_policy #{node[:squid][:cache_replacement_policy]}"             if node[:squid][:cache_replacement_policy] %>
+<%= "cache_swap_low #{node[:squid][:cache_swap_low]}"                                 if node[:squid][:cache_swap_low] %>
+<%= "cache_swap_high #{node[:squid][:cache_swap_high]}"                               if node[:squid][:cache_swap_high] %>
+
+<%= "maximum_object_size #{node[:squid][:maximum_object_size]}"                       if node[:squid][:maximum_object_size] %>
+<%= "maximum_object_size_in_memory #{node[:squid][:maximum_object_size_in_memory]}"   if node[:squid][:maximum_object_size_in_memory] %>
+
+<%= "memory_pools #{node[:squid][:memory_pools]}"                                     if node[:squid][:memory_pools] %>
+<%= "half_closed_clients #{node[:squid][:half_closed_clients]}"                       if node[:squid][:half_closed_clients] %>
+<%= "client_db #{node[:squid][:client_db]}"                                           if node[:squid][:client_db] %>
+<%= "offline_mode #{node[:squid][:offline_mode]}"                                     if node[:squid][:offline_mode] %>
 
 forwarded_for off
 request_header_access Allow allow all
