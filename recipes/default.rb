@@ -5,12 +5,12 @@ node.set[:squid][:directories] = [
   node[:squid][:log_dir],
   node[:squid][:cache_dir],
   node[:squid][:coredump_dir]
-]
+].uniq
 
 node.set[:squid][:log_files] = [
   node[:squid][:access_log_path],
   node[:squid][:cache_log_path]
-]
+].uniq
 
 node[:squid][:directories].each do |dir|
   # Create directories if they do not exist
@@ -30,6 +30,7 @@ execute "chown-squid-directories" do
   user "root"
   action :nothing
   only_if { node[:squid][:user] && node[:squid][:group] }
+  ignore_failure true
 end
 
 execute "chmod-squid-directories" do
@@ -37,6 +38,7 @@ execute "chmod-squid-directories" do
   command "chmod -Rf 755 #{node[:squid][:directories].join(" ")}"
   user "root"
   action :nothing
+  ignore_failure true
 end
 
 execute "chmod-squid-log-files" do
@@ -44,6 +46,7 @@ execute "chmod-squid-log-files" do
   command "chmod -Rf 777 #{node[:squid][:log_files].join(" ")}"
   user "root"
   action :nothing
+  ignore_failure true
 end
 
 template node[:squid][:config_file] do

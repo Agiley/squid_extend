@@ -25,7 +25,8 @@ normal[:squid][:auth][:credentials_ttl]           =   '1 minute'
 normal[:squid][:mode]                             =   'proxy'
 
 # Optimizations
-normal[:squid][:cache_mem]                        =   '128 MB'
+# Automatically set the cache_mem based on the total amount of memory of the machine. E.g., 1024mb memory will be converted to 128mb cache_mem
+normal[:squid][:cache_mem]                        =   "#{((node[:memory][:total].to_f * 0.125) / 1024.0).floor} MB"
 normal[:squid][:cache_size]                       =   '5120' # 5gb storage
 normal[:squid][:cache_replacement_policy]         =   'heap GDSF' # The heap GDSF policy optimises object hit rate by keeping smaller popular objects in cache
 normal[:squid][:cache_swap_low]                   =   '87' # Start purging stuff from cache when disk usage reaches 87%
