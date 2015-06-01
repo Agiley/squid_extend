@@ -32,7 +32,7 @@ normal[:squid][:cache_swap_low]                   =   '87' # Start purging stuff
 normal[:squid][:cache_swap_high]                  =   '90' # Aggressive purge of old cache at 90%
 
 normal[:squid][:maximum_object_size]              =   '4 MB'
-normal[:squid][:maximum_object_size_in_memory]    =   '128 KB' # Default is 512kb
+normal[:squid][:maximum_object_size_in_memory]    =   '256 KB' # Default is 512kb
 
 normal[:squid][:memory_pools]                     =   'off'
 normal[:squid][:half_closed_clients]              =   'off'
