@@ -12,6 +12,6 @@ recipe "squid_extend::auth",            "Recipe used to configure auth using htp
   supports os
 end
 
-%w{ squid htpasswd }.each do |cb|
+%w{ ohai squid htpasswd }.each do |cb|
   depends cb
 end
