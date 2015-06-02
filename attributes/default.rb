@@ -12,6 +12,7 @@ normal[:squid][:log_format]                       =   "squid"
 normal[:squid][:dns][:nameservers]                =   ['8.8.8.8', '8.8.4.4']
 normal[:squid][:dns][:ipcache_size]               =   10240
 normal[:squid][:dns][:negative_dns_ttl]           =   '5 minutes'
+normal[:squid][:dns][:dns_v4_first]               =   'off'
 
 normal[:squid][:ip_addresses]                     =   [node[:ipaddress]]
 

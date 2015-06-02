@@ -40,8 +40,9 @@ tcp_outgoing_address <%= ip_address %> ip_<%= index %>
 dns_nameservers <%= node[:squid][:dns][:nameservers].join(" ") %>
 <%- end %>
 
-<%= "ipcache_size #{node[:squid][:dns][:ipcache_size]}" if node[:squid][:dns][:ipcache_size] %>
+<%= "ipcache_size #{node[:squid][:dns][:ipcache_size]}"         if node[:squid][:dns][:ipcache_size] %>
 <%= "negative_dns_ttl #{node[:squid][:dns][:negative_dns_ttl]}" if node[:squid][:dns][:negative_dns_ttl] %>
+<%= "dns_v4_first #{node[:squid][:dns][:dns_v4_first]}"         if node[:squid][:dns][:dns_v4_first] %>
 
 <%- if node[:squid][:mode] == 'proxy' %>
 icp_port 0
