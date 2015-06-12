@@ -41,9 +41,9 @@ execute "chmod-squid-directories" do
   ignore_failure true
 end
 
-execute "chmod-squid-log-files" do
-  Chef::Log.debug("Will run: chmod -Rf 777 #{node[:squid][:log_files].join(" ")}")
-  command "chmod -Rf 777 #{node[:squid][:log_files].join(" ")}"
+execute "chmod-squid-log-directory" do
+  Chef::Log.debug("Will run: chmod 777 #{node[:squid][:log_dir]}")
+  command "chmod 777 #{node[:squid][:log_dir]}"
   user "root"
   action :nothing
   ignore_failure true
@@ -55,7 +55,7 @@ template node[:squid][:config_file] do
   
   notifies :run, "execute[chown-squid-directories]", :immediately
   notifies :run, "execute[chmod-squid-directories]", :immediately
-  notifies :run, "execute[chmod-squid-log-files]", :immediately
+  notifies :run, "execute[chmod-squid-log-directory]", :immediately
     
   notifies :restart, "service[#{node[:squid][:service_name]}]", :immediately
 end
