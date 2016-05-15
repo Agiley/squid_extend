@@ -1,6 +1,11 @@
 normal[:squid][:user]                             =   'proxy'
 normal[:squid][:group]                            =   'proxy'
-normal[:squid][:pid_file]                         =   '/var/run/squid3.pid'
+
+if node[:platform_version].to_f < 16.04
+  normal[:squid][:pid_file]                       =   '/var/run/squid3.pid'
+elsif node[:platform_version].to_f >= 16.04
+  normal[:squid][:pid_file]                       =   '/var/run/squid.pid'
+end
 
 normal[:squid][:port]                             =   8800
 
@@ -17,8 +22,15 @@ normal[:squid][:dns][:dns_v4_first]               =   'off'
 normal[:squid][:ip_addresses]                     =   [node[:ipaddress]]
 
 normal[:squid][:auth][:enable]                    =   true
-normal[:squid][:auth][:program]                   =   '/usr/lib/squid3/basic_ncsa_auth'
-normal[:squid][:auth][:file]                      =   '/etc/squid3/passwords'
+
+if node[:platform_version].to_f < 16.04
+  normal[:squid][:auth][:program]                 =   '/usr/lib/squid3/basic_ncsa_auth'
+  normal[:squid][:auth][:file]                    =   '/etc/squid3/passwords'
+elsif node[:platform_version].to_f >= 16.04
+  normal[:squid][:auth][:program]                 =   '/usr/lib/squid/basic_ncsa_auth'
+  normal[:squid][:auth][:file]                    =   '/etc/squid/passwords'
+end
+
 normal[:squid][:auth][:realm]                     =   'Squid proxy-caching web server'
 normal[:squid][:auth][:children]                  =   5
 normal[:squid][:auth][:credentials_ttl]           =   '1 minute'
