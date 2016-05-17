@@ -57,5 +57,5 @@ template node[:squid][:config_file] do
   notifies :run, "execute[chmod-squid-directories]", :immediately
   notifies :run, "execute[chmod-squid-log-directory]", :immediately
     
-  notifies :restart, "service[#{node[:squid][:service_name]}]", :immediately
+  notifies :restart, "service[squid]", :immediately
 end
