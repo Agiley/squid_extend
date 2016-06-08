@@ -72,7 +72,12 @@ cache_dir ufs <%= node[:squid][:cache_dir] %> <%= node[:squid][:cache_size] %> 1
 <%= "client_db #{node[:squid][:client_db]}"                                           if node[:squid][:client_db] %>
 <%= "offline_mode #{node[:squid][:offline_mode]}"                                     if node[:squid][:offline_mode] %>
 
-forwarded_for off
+# Anonymization
+forwarded_for delete
+via off
+follow_x_forwarded_for deny all
+
+# http://www.squid-cache.org/Doc/config/request_header_access/
 request_header_access Allow allow all
 request_header_access Authorization allow all
 request_header_access WWW-Authenticate allow all
@@ -102,3 +107,34 @@ request_header_access Proxy-Connection allow all
 request_header_access User-Agent allow all
 request_header_access Cookie allow all
 request_header_access All deny all
+
+# http://www.squid-cache.org/Doc/config/reply_header_access/
+reply_header_access Allow allow all
+reply_header_access Authorization allow all
+reply_header_access WWW-Authenticate allow all
+reply_header_access Proxy-Authorization allow all
+reply_header_access Proxy-Authenticate allow all
+reply_header_access Cache-Control allow all
+reply_header_access Content-Encoding allow all
+reply_header_access Content-Length allow all
+reply_header_access Content-Type allow all
+reply_header_access Date allow all
+reply_header_access Expires allow all
+reply_header_access Host allow all
+reply_header_access If-Modified-Since allow all
+reply_header_access Last-Modified allow all
+reply_header_access Location allow all
+reply_header_access Pragma allow all
+reply_header_access Accept allow all
+reply_header_access Accept-Charset allow all
+reply_header_access Accept-Encoding allow all
+reply_header_access Accept-Language allow all
+reply_header_access Content-Language allow all
+reply_header_access Mime-Version allow all
+reply_header_access Retry-After allow all
+reply_header_access Title allow all
+reply_header_access Connection allow all
+reply_header_access Proxy-Connection allow all
+reply_header_access User-Agent allow all
+reply_header_access Cookie allow all
+reply_header_access All deny all
