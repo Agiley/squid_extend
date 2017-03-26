@@ -19,6 +19,8 @@ normal[:squid][:dns][:ipcache_size]               =   10240
 normal[:squid][:dns][:negative_dns_ttl]           =   '5 minutes'
 normal[:squid][:dns][:dns_v4_first]               =   'off'
 
+normal[:squid][:sarg][:binary]                    =   '/usr/sbin/sarg-reports'
+
 normal[:squid][:ip_addresses]                     =   [node[:ipaddress]]
 
 normal[:squid][:auth][:enable]                    =   true

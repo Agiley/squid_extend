@@ -59,3 +59,23 @@ template node[:squid][:config_file] do
     
   notifies :restart, "service[squid]", :immediately
 end
+
+# Re-generate logrotate file so that it uses the correct user:group for su
+logrotate_app "squid" do
+  cookbook "logrotate"
+  path "#{node[:squid][:log_dir]}/*.log"
+  enable false
+end
+
+logrotate_app "squid" do
+  cookbook "logrotate"
+  path "#{node[:squid][:log_dir]}/*.log"
+  enable true
+  su "#{node[:squid][:user]} #{node[:squid][:group]}"
+  frequency "daily"
+  rotate 2
+  sharedscripts true
+  prerotate "test ! -x #{node[:squid][:sarg][:binary]} || #{node[:squid][:sarg][:binary]}"
+  postrotate "test ! -e #{node[:squid][:pid_file]} || test ! -x #{node[:squid][:binary]} || #{node[:squid][:binary]} -k rotate"
+  options ["compress", "delaycompress", "missingok", "nocreate"]
+end
