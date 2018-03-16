@@ -1,13 +1,13 @@
 include_recipe 'squid'
 include_recipe 'squid_extend::auth'
 
-node.set[:squid][:directories] = [
+node.default[:squid][:directories] = [
   node[:squid][:log_dir],
   node[:squid][:cache_dir],
   node[:squid][:coredump_dir]
 ].uniq
 
-node.set[:squid][:log_files] = [
+node.default[:squid][:log_files] = [
   node[:squid][:access_log_path],
   node[:squid][:cache_log_path]
 ].uniq
